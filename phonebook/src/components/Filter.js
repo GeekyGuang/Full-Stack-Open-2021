@@ -1,0 +1,7 @@
+import React from 'react'
+
+const Filter = ({ handleFilterName }) => (
+    <div>filter shown with: <input type='text' onChange={handleFilterName} /></div>
+)
+
+export default Filter
