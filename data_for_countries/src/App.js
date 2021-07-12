@@ -9,8 +9,18 @@ const Languages = ({ lan }) => (
 )
 
 const CountryDetail = ({ name, allData }) => {
+
   for (let item of allData) {
     if (item.name === name) {
+      let weather = {}
+      try {
+        (async () => {
+          weather = await axios.get(`http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_API_KEY}&query=${item.capital}`).data
+        })()
+      } catch (e) {
+        console.log(e)
+      }
+      console.log('w:', weather)
       return (
         <div>
           <h1>{item.name}</h1>
@@ -18,6 +28,10 @@ const CountryDetail = ({ name, allData }) => {
           <div>population: {item.population}</div>
           <Languages lan={item.languages} />
           <div><img src={item.flag} alt='flag' width="500" /></div>
+          {/* <h1>weather in {item.capital}</h1>
+          <div>temperature: {weather.current.temperature} Celcius</div>
+          <div>{weather.current.weather_icons.map(item => <img src={item} alt="icon" />)}</div>
+          <div>wind: {weather.current.wind_speed} direction {weather.current.wind_dir}</div> */}
         </div>
       )
     }
