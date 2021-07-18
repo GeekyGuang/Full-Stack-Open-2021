@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Numbers from './components/Numbers'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filterFlag, setFilterFlag] = useState(false)
   const [filterPersons, setFilterPersons] = useState([])
+  const [errorMessage, setErrorMessage] = useState('no error presently')
 
   useEffect(() => {
     personService.getAll()
@@ -39,6 +41,10 @@ const App = () => {
         personService.update(person.id, newObject)
           .then(response => {
             setPersons(persons.map(item => item.name !== newName ? item : response))
+            setErrorMessage(`${newName}'number is replaced`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000);
           })
       }
     } else {
@@ -46,6 +52,10 @@ const App = () => {
         .then(response => {
           setPersons(persons.concat(response))
           setFilterFlag(false)
+          setErrorMessage(`${newName} is added successfully`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000);
         })
     }
   }
@@ -62,6 +72,10 @@ const App = () => {
       personService.deletePerson(item.id)
         .then(() => {
           setPersons(persons.filter(p => p.id !== item.id))
+          setErrorMessage(`${item.name} is deleted`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000);
         })
         .catch(error => console.log(error))
     }
@@ -70,6 +84,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter handleFilterName={handleFilterName} />
       <h2>add a new</h2>
       <PersonForm handleSubmit={handleSubmit}
