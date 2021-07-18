@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Numbers from './components/Numbers'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,10 +12,9 @@ const App = () => {
   const [filterPersons, setFilterPersons] = useState([])
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService.getAll()
+      .then(persons => {
+        setPersons(persons)
       })
   }, [])
 
@@ -33,9 +32,16 @@ const App = () => {
     if (names.indexOf(newName) >= 0) {
       alert(`${newName}已存在`)
     } else {
-      setPersons([...persons, { name: newName, number: newNumber }])
+      const newObject = {
+        name: newName,
+        number: newNumber
+      }
+      personService.create(newObject)
+        .then(response => {
+          setPersons(persons.concat(response))
+          setFilterFlag(false)
+        })
     }
-    setFilterFlag(false)
   }
 
   const handleFilterName = (event) => {
@@ -43,6 +49,16 @@ const App = () => {
     const names = persons.filter(item => item.name.toLowerCase().indexOf(name) >= 0)
     setFilterPersons(names)
     setFilterFlag(true)
+  }
+
+  const handleDelete = (item) => {
+    if (window.confirm(`Delete ${item.name}?`)) {
+      personService.deletePerson(item.id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== item.id))
+        })
+        .catch(error => console.log(error))
+    }
   }
 
   return (
@@ -56,7 +72,7 @@ const App = () => {
         newNumber={newNumber}
         handleNumberChange={handleNumberChange} />
       <h2>Numbers</h2>
-      <Numbers flag={filterFlag} persons={persons} filterPersons={filterPersons} />
+      <Numbers flag={filterFlag} persons={persons} filterPersons={filterPersons} handleDelete={handleDelete} />
     </div>
   )
 }
