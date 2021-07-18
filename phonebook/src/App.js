@@ -46,6 +46,13 @@ const App = () => {
               setErrorMessage(null)
             }, 5000);
           })
+          .catch(error => {
+            setErrorMessage(`${newName} has already been deleted from server`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000);
+            setPersons(persons.filter(p => p.name !== newName))
+          })
       }
     } else {
       personService.create(newObject)
