@@ -29,13 +29,19 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     const names = persons.map(item => item.name)
+    const newObject = {
+      name: newName,
+      number: newNumber
+    }
     if (names.indexOf(newName) >= 0) {
-      alert(`${newName}已存在`)
-    } else {
-      const newObject = {
-        name: newName,
-        number: newNumber
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const person = persons.find(item => item.name === newName)
+        personService.update(person.id, newObject)
+          .then(response => {
+            setPersons(persons.map(item => item.name !== newName ? item : response))
+          })
       }
+    } else {
       personService.create(newObject)
         .then(response => {
           setPersons(persons.concat(response))
