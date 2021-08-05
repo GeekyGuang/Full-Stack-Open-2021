@@ -47,11 +47,15 @@ const App = () => {
             }, 5000);
           })
           .catch(error => {
-            setErrorMessage(`${newName} has already been deleted from server`)
+            if (error.response.status === 400) {
+              setErrorMessage(error.response.data.error)
+            } else {
+              setErrorMessage(`${newName} has already been deleted from server`)
+              setPersons(persons.filter(p => p.name !== newName))
+            }
             setTimeout(() => {
               setErrorMessage(null)
             }, 5000);
-            setPersons(persons.filter(p => p.name !== newName))
           })
       }
     } else {
@@ -60,6 +64,11 @@ const App = () => {
           setPersons(persons.concat(response))
           setFilterFlag(false)
           setErrorMessage(`${newName} is added successfully`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000);
+        }).catch(error => {
+          setErrorMessage(error.response.data.error)
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000);
