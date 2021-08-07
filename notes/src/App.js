@@ -72,6 +72,8 @@ const App = () => {
       const user = await loginService.login({
         username, password
       })
+
+      noteService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -107,7 +109,7 @@ const App = () => {
     </form>
   )
 
-  const noteForm = () => {
+  const noteForm = () => (
     <form onSubmit={addNote}>
       <input
         value={newNote}
@@ -115,7 +117,7 @@ const App = () => {
       />
       <button type="submit">save</button>
     </form>
-  }
+  )
 
   return (
     <div>
@@ -125,7 +127,7 @@ const App = () => {
         loginForm() :
         <div>
           <p>{user.name} logged-in</p>
-          {noteForm}
+          {noteForm()}
         </div>
       }
       <div>
