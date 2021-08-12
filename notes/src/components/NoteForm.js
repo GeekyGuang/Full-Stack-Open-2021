@@ -8,7 +8,7 @@ const NoteForm = ({ createNote }) => {
     createNote({
       content: newNote,
       date: new Date().toISOString(),
-      important: Math.random() < 0.5
+      important: Math.random() < 0.5,
     })
 
     setNewNote('')
@@ -23,15 +23,10 @@ const NoteForm = ({ createNote }) => {
       <h2>Create a new note</h2>
 
       <form onSubmit={addNote}>
-        <input
-          value={newNote}
-          onChange={handleChange}
-        />
-        <button type="submit">save</button>
+        <input value={newNote} onChange={handleChange} />
+        <button type='submit'>save</button>
       </form>
-
     </div>
-
   )
 }
 
