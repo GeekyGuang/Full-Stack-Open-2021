@@ -46,5 +46,5 @@ test('clicking the button calls event handler once', () => {
   fireEvent.click(button)
 
   // 测试mock function是否只被调用了一次
-  expect(mockHandler.mockHandler.calls).toHaveLength(1)
+  expect(mockHandler.mock.calls).toHaveLength(1)
 })
