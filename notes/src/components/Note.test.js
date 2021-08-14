@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import { prettyDOM } from '@testing-library/dom'
 import Note from './Note'
 
@@ -29,4 +29,22 @@ test('renders content', () => {
   // method 3
   const div = component.container.querySelector('.note')
   expect(div).toHaveTextContent('Component testing is done with react-testing-library')
+})
+
+test('clicking the button calls event handler once', () => {
+  const note = {
+    content: 'Component testing is done with react-testing-library',
+    important: true,
+  }
+
+  // 用jest定义mock函数
+  const mockHandler = jest.fn()
+
+  const component = render(<Note note={note} toggleImportance={mockHandler} />)
+
+  const button = component.getByText('make not important')
+  fireEvent.click(button)
+
+  // 测试mock function是否只被调用了一次
+  expect(mockHandler.mockHandler.calls).toHaveLength(1)
 })
