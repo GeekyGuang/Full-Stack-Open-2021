@@ -57,4 +57,18 @@ describe('Note app', function () {
       })
     })
   })
+
+  it.only('loggin fails with wrong password', function () {
+    cy.contains('login').click()
+    cy.get('#username').type('mluukkai')
+    cy.get('#password').type('wrong')
+    cy.get('#login-button').click()
+
+    cy.get('.error')
+      .should('contain', 'Wrong credentials')
+      .and('have.css', 'color', 'rgb(255, 0, 0)')
+      .and('have.css', 'border-style', 'solid')
+
+    cy.get('html').should('not.contain', 'Matti Luukkainen logged in')
+  })
 })
