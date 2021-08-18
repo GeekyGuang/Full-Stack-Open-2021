@@ -17,13 +17,10 @@ const App = () => {
   const [user, setUser] = useState(null)
   const noteFormRef = useRef()
 
-
   useEffect(() => {
-    noteService
-      .getAll()
-      .then(initialNotes => {
-        setNotes(initialNotes)
-      })
+    noteService.getAll().then((initialNotes) => {
+      setNotes(initialNotes)
+    })
   }, [])
 
   useEffect(() => {
@@ -35,36 +32,31 @@ const App = () => {
     }
   }, [])
 
-  const notesToShow = showAll
-    ? notes
-    : notes.filter(note => note.important)
+  const notesToShow = showAll ? notes : notes.filter((note) => note.important)
 
-  const addNote = (noteObject) => {
+  const addNote = async (noteObject) => {
     noteFormRef.current.toggleVisibility()
-    noteService
-      .create(noteObject)
-      .then((returnedNote) => {
-        setNotes(notes.concat(returnedNote))
-      })
+    await noteService.create(noteObject)
+    noteService.getAll().then((initialNotes) => {
+      setNotes(initialNotes)
+    })
   }
 
   const toggleImportanceOf = (id) => {
-    const note = notes.find(n => n.id === id)
+    const note = notes.find((n) => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
     noteService
       .update(id, changedNote)
-      .then(returnedNote => {
-        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      .then((returnedNote) => {
+        setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)))
       })
-      .catch(error => {
-        setErrorMessage(
-          `Note '${note.content}' was already removed from server`
-        )
+      .catch(() => {
+        setErrorMessage(`Note '${note.content}' was already removed from server`)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setNotes(notes.filter(n => n.id !== id))
+        setNotes(notes.filter((n) => n.id !== id))
       })
   }
 
@@ -73,12 +65,11 @@ const App = () => {
 
     try {
       const user = await loginService.login({
-        username, password
+        username,
+        password,
       })
 
-      window.localStorage.setItem(
-        'loggedNoteappUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
 
       noteService.setToken(user.token)
       setUser(user)
@@ -104,9 +95,8 @@ const App = () => {
     </Togglable>
   )
 
-
   const noteForm = () => (
-    <Togglable buttonLabel="new note" ref={noteFormRef}>
+    <Togglable buttonLabel='new note' ref={noteFormRef}>
       <NoteForm createNote={addNote} />
     </Togglable>
   )
@@ -115,28 +105,31 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message={errorMessage} />
-      {user === null ?
-        loginForm() :
+      {user === null ? (
+        loginForm()
+      ) : (
         <div>
-          <p>{user.name} logged-in<button onClick={() => {
-            setUser(null)
-            window.localStorage.removeItem('loggedNoteappUser')
-          }}>logout</button></p>
+          <p>
+            {user.name} logged-in
+            <button
+              onClick={() => {
+                setUser(null)
+                window.localStorage.removeItem('loggedNoteappUser')
+              }}
+            >
+              logout
+            </button>
+          </p>
           {noteForm()}
         </div>
-      }
+      )}
       <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all'}
-        </button>
+        <button onClick={() => setShowAll(!showAll)}>show {showAll ? 'important' : 'all'}</button>
       </div>
       <ul>
-        {notesToShow.map(note =>
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)} />
-        )}
+        {notesToShow.map((note) => (
+          <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)} />
+        ))}
       </ul>
 
       <Footer />
@@ -144,4 +137,4 @@ const App = () => {
   )
 }
 
-export default App;
+export default App
