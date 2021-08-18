@@ -19,39 +19,38 @@ describe('Note app', function () {
   //   cy.contains('wtf is this app?')
   // })
 
-  it('login form can be opened', function () {
-    cy.contains('login').click()
-    cy.get('#username').type('mluukkai')
-    cy.get('#password').type('salainen')
-    cy.get('#login-button').click()
+  // it('login form can be opened', function () {
+  //   cy.contains('login').click()
+  //   cy.get('#username').type('mluukkai')
+  //   cy.get('#password').type('salainen')
+  //   cy.get('#login-button').click()
 
-    cy.contains('Superuser logged-in')
-  })
+  //   cy.contains('Superuser logged-in')
+  // })
 
   describe('when logged in', function () {
     beforeEach(function () {
       cy.login({ username: 'mluukkai', password: 'salainen' })
     })
 
-    it('a new note can be created', function () {
-      cy.contains('new note').click()
-      cy.get('input').type('a note created by cypress')
-      cy.contains('save').click()
-      cy.contains('a note created by cypress')
-    })
+    // it('a new note can be created', function () {
+    //   cy.contains('new note').click()
+    //   cy.get('input').type('a note created by cypress')
+    //   cy.contains('save').click()
+    //   cy.contains('a note created by cypress')
+    // })
 
     describe('and a note exists', function () {
       beforeEach(function () {
-        cy.createNote({
-          content: 'another note cypress',
-          important: false,
-        })
+        cy.createNote({ content: 'first note', important: false })
+        cy.createNote({ content: 'second note', important: false })
+        cy.createNote({ content: 'third note', important: false })
       })
 
       it('it can be made important', function () {
-        cy.contains('another note cypress').contains('make important').click()
-
-        cy.contains('another note cypress').contains('make not important')
+        cy.contains('second note').parent().find('button').as('theButton')
+        cy.get('@theButton').click()
+        cy.get('@theButton').should('contain', 'make not important')
       })
     })
   })
