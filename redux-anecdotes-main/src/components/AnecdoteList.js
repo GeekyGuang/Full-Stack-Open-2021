@@ -5,7 +5,9 @@ import { notificationChange } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
   const anecdotes = useSelector((state) =>
-    state.anecdotes.sort((a, b) => b.votes - a.votes)
+    state.anecdotes
+      .filter((item) => item.content.indexOf(state.filter) >= 0)
+      .sort((a, b) => b.votes - a.votes)
   )
   const dispatch = useDispatch()
 
