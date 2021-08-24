@@ -1,3 +1,4 @@
+import anecdotesService from '../services/anecdotes'
 // const anecdotesAtStart = [
 //   'If it hurts, do it more often',
 //   'Adding manpower to a late software project makes it later!',
@@ -7,19 +8,27 @@
 //   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
 // ]
 
-const getId = () => (100000 * Math.random()).toFixed(0)
+// const getId = () => (100000 * Math.random()).toFixed(0)
 
 export const voteAction = (id) => {
-  return {
-    type: 'VOTE',
-    id,
+  return async (dispatch) => {
+    const anecdote = await anecdotesService.get(id)
+    anecdote.votes += 1
+    const votedAnecdote = await anecdotesService.update(id, anecdote)
+    dispatch({
+      type: 'VOTE',
+      votedAnecdote,
+    })
   }
 }
 
 export const createAction = (content) => {
-  return {
-    type: 'CREATE',
-    content,
+  return async (dispatch) => {
+    const newAnecdote = await anecdotesService.createNew(content)
+    dispatch({
+      type: 'CREATE',
+      newAnecdote,
+    })
   }
 }
 
@@ -31,10 +40,13 @@ export const createAction = (content) => {
 //   }
 // }
 
-export const initAction = (data) => {
-  return {
-    type: 'INIT',
-    data,
+export const initAction = () => {
+  return async (dispatch) => {
+    const anecdotes = await anecdotesService.getAll()
+    dispatch({
+      type: 'INIT',
+      anecdotes,
+    })
   }
 }
 
@@ -43,15 +55,15 @@ export const initAction = (data) => {
 const anecdoteReducer = (state = [], action) => {
   switch (action.type) {
     case 'VOTE': {
-      const votedAnecdote = state.find((item) => item.id === action.id)
-      const newAnecdote = { ...votedAnecdote, votes: votedAnecdote.votes + 1 }
-      return state.map((item) => (item.id !== action.id ? item : newAnecdote))
+      return state.map((item) =>
+        item.id !== action.votedAnecdote.id ? item : action.votedAnecdote
+      )
     }
     case 'INIT': {
-      return action.data
+      return action.anecdotes
     }
     case 'CREATE': {
-      return [...state, action.content]
+      return [...state, action.newAnecdote]
     }
     default:
       return state
