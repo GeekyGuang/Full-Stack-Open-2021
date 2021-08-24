@@ -23,13 +23,13 @@ export const createAction = (content) => {
   }
 }
 
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0,
-  }
-}
+// const asObject = (anecdote) => {
+//   return {
+//     content: anecdote,
+//     id: getId(),
+//     votes: 0,
+//   }
+// }
 
 export const initAction = (data) => {
   return {
@@ -51,8 +51,7 @@ const anecdoteReducer = (state = [], action) => {
       return action.data
     }
     case 'CREATE': {
-      const newAnecdote = asObject(action.content)
-      return [...state, newAnecdote]
+      return [...state, action.content]
     }
     default:
       return state
