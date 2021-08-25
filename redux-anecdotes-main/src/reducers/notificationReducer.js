@@ -1,11 +1,19 @@
-export const notificationChange = (notification) => {
-  return {
-    type: 'SET_NOTIFICATION',
-    notification,
+export const setNotification = (notification, seconds) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      notification,
+    })
+    setTimeout(() => {
+      dispatch({
+        type: 'SET_NOTIFICATION',
+        notification: '',
+      })
+    }, seconds * 1000)
   }
 }
 
-const notificationReducer = (state = 'hello', action) => {
+const notificationReducer = (state = '', action) => {
   switch (action.type) {
     case 'SET_NOTIFICATION':
       return action.notification
