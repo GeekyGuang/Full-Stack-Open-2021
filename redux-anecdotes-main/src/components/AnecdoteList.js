@@ -14,7 +14,7 @@ const mapStateToProps = (state) => {
 const AnecdoteList = (props) => {
   const vote = (id, content) => {
     props.voteAction(id)
-    props.setNotification(`you voted '${content}'`, 3)
+    props.setNotification(`you voted '${content}'`, 10)
   }
 
   return (

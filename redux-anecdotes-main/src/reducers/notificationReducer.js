@@ -4,7 +4,10 @@ export const setNotification = (notification, seconds) => {
       type: 'SET_NOTIFICATION',
       notification,
     })
-    setTimeout(() => {
+    if (window.timeoutID) {
+      console.log(window.timeoutID)
+    }
+    window.timeoutID = setTimeout(() => {
       dispatch({
         type: 'SET_NOTIFICATION',
         notification: '',
