@@ -93,7 +93,7 @@ const CreateNew = (props) => {
   }
 
   const reset = (event) => {
-    // event.preventDefault()
+    event.stopPropagation()
     content.reset()
     author.reset()
     info.reset()
