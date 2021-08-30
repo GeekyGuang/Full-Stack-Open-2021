@@ -5,10 +5,12 @@ export const useField = (type, name) => {
   const onChange = (event) => setValue(event.target.value)
   const reset = () => setValue('')
   return {
-    type,
-    name,
-    value,
-    onChange,
+    props: {
+      type,
+      name,
+      value,
+      onChange,
+    },
     reset,
   }
 }
