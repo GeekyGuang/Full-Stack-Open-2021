@@ -17,7 +17,7 @@ const parseArgument = (args: Array<string>): BodyData => {
   }
 }
 
-const calculateBmi = (w: number, h: number): string => {
+const calculateBmi = (w: number, h: number) => {
   const bmi = w / (h * h)
   let result = 'Normal'
   if (bmi < 0.74) {
@@ -28,12 +28,11 @@ const calculateBmi = (w: number, h: number): string => {
     result = 'Obese'
   }
 
-  return `${result} (${w}, ${h})`
+  return {
+    weight: w,
+    height: h,
+    bmi: `${result} (${w}, ${h})`,
+  }
 }
 
-try {
-  const { w, h } = parseArgument(process.argv)
-  console.log(calculateBmi(w, h))
-} catch (e) {
-  console.log('Error, something bad happened, message: ', e.message)
-}
+export default calculateBmi
