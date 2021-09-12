@@ -1,0 +1,16 @@
+###
+GET http://localhost:3000/api/diaries
+
+###
+GET http://localhost:3000/api/diaries/4
+
+###
+POST http://localhost:3000/api/diaries
+Content-Type: application/json
+
+{
+  "date": "2019-05-11",
+  "weather": "windy",
+  "visibility": "good",
+  "comment": "good for outside"
+}
