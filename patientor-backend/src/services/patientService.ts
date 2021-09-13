@@ -14,7 +14,7 @@ const getPatients = (): Array<PatientNoSsn> => {
 
 const addPatient = (info: NewPatient): Patient => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const id = uuid() as string
+  const id = uuid()
   const newPatient = {
     id,
     ...info,
