@@ -26,11 +26,18 @@ interface CourseCombinePart extends CoursePartBase {
   exerciseSubmissionLink?: string
 }
 
+interface CourseBackendPart extends CoursePartBase {
+  type: 'special'
+  requirements: string[]
+  description: string
+}
+
 type CoursePart =
   | CourseNormalPart
   | CourseProjectPart
   | CourseSubmissionPart
   | CourseCombinePart
+  | CourseBackendPart
 
 const Part = ({ coursepart }: { coursepart: CoursePart }) => {
   switch (coursepart.type) {
@@ -54,6 +61,8 @@ const Part = ({ coursepart }: { coursepart: CoursePart }) => {
           {coursepart.exerciseSubmissionLink}
         </>
       )
+    case 'special':
+      return <>special</>
     default:
       return <></>
       break
@@ -108,6 +117,13 @@ const App: React.FC = () => {
       description: 'Confusing description',
       exerciseSubmissionLink: 'https://fake-exercise-submit.made-up-url.dev',
       type: 'submission',
+    },
+    {
+      name: 'Backend development',
+      exerciseCount: 21,
+      description: 'Typing the backend',
+      requirements: ['nodejs', 'jest'],
+      type: 'special',
     },
   ]
 
