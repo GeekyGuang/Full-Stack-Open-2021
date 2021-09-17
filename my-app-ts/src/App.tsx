@@ -8,7 +8,6 @@ interface CoursePartBase {
 
 interface CourseNormalPart extends CoursePartBase {
   type: 'normal'
-  description: string
 }
 
 interface CourseProjectPart extends CoursePartBase {
@@ -18,11 +17,48 @@ interface CourseProjectPart extends CoursePartBase {
 
 interface CourseSubmissionPart extends CoursePartBase {
   type: 'submission'
-  description: string
   exerciseSubmissionLink: string
 }
 
-type CoursePart = CourseNormalPart | CourseProjectPart | CourseSubmissionPart
+interface CourseCombinePart extends CoursePartBase {
+  type: 'normal' | 'submission'
+  description: string
+  exerciseSubmissionLink?: string
+}
+
+type CoursePart =
+  | CourseNormalPart
+  | CourseProjectPart
+  | CourseSubmissionPart
+  | CourseCombinePart
+
+const Part = ({ coursepart }: { coursepart: CoursePart }) => {
+  switch (coursepart.type) {
+    case 'normal':
+      return (
+        <>
+          {coursepart.name} {coursepart.type} {coursepart.exerciseCount}
+        </>
+      )
+    case 'groupProject':
+      return (
+        <>
+          {coursepart.name} {coursepart.type} {coursepart.exerciseCount}{' '}
+          {coursepart.groupProjectCount}
+        </>
+      )
+    case 'submission':
+      return (
+        <>
+          {coursepart.name} {coursepart.type} {coursepart.exerciseCount}{' '}
+          {coursepart.exerciseSubmissionLink}
+        </>
+      )
+    default:
+      return <></>
+      break
+  }
+}
 
 const Header = ({ courseName }: { courseName: string }) => <h1>{courseName}</h1>
 const Content = ({ courseParts }: { courseParts: CoursePart[] }) => {
@@ -30,7 +66,7 @@ const Content = ({ courseParts }: { courseParts: CoursePart[] }) => {
     <>
       {courseParts.map((item) => (
         <p key={item.name}>
-          {item.name} {item.exerciseCount}
+          <Part coursepart={item} />
         </p>
       ))}
     </>
